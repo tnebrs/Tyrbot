@@ -80,6 +80,7 @@ try:
 
     if not config.bots[0].main:
         raise Exception("First bot must be configured as a main bot")
+        print(config.bots)
 
     # ensure dimension is integer
     if isinstance(config.server.dimension, str):
