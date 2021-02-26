@@ -48,7 +48,7 @@ class PrivateChannelService:
         else:
             self.logger.log_chat(conn, "Private Channel", char_name, packet.message)
 
-            if not conn.is_main or conn.char_id == packet.char_id:
+            if not conn.main or conn.char_id == packet.char_id:
                 return
 
             if not self.handle_private_channel_command(conn, packet):
@@ -67,7 +67,7 @@ class PrivateChannelService:
             self.logger.log_chat(conn, "Private Channel", None, f"{char_name} joined the channel.")
             conn.private_channel[packet.char_id] = packet
 
-            if conn.is_main:
+            if conn.main:
                 self.event_service.fire_event(self.JOINED_PRIVATE_CHANNEL_EVENT, DictObject({"char_id": packet.char_id,
                                                                                              "name": char_name,
                                                                                              "conn": conn}))
@@ -82,13 +82,13 @@ class PrivateChannelService:
             self.logger.log_chat(conn, "Private Channel", None, f"{char_name} left the channel.")
             del conn.private_channel[packet.char_id]
 
-            if conn.is_main:
+            if conn.main:
                 self.event_service.fire_event(self.LEFT_PRIVATE_CHANNEL_EVENT, DictObject({"char_id": packet.char_id,
                                                                                            "name": char_name,
                                                                                            "conn": conn}))
 
     def handle_private_channel_command(self, conn: Conn, packet: server_packets.PrivateChannelMessage):
-        if not self.setting_service.get("accept_commands_from_slave_bots").get_value() and not conn.is_main:
+        if not self.setting_service.get("accept_commands_from_slave_bots").get_value() and not conn.main:
             return False
 
         # since the command symbol is required in the private channel,
@@ -121,7 +121,7 @@ class PrivateChannelService:
             return False
 
     def invite(self, char_id, conn: Conn):
-        if char_id != conn.char_id and conn.is_main:
+        if char_id != conn.char_id and conn.main:
             conn.send_packet(client_packets.PrivateChannelInvite(char_id))
 
     def kick(self, char_id, conn: Conn):

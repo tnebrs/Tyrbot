@@ -78,7 +78,7 @@ try:
     if "bots" not in config:
         raise Exception("No bots detected in config")
 
-    if not config.bots[0].is_main:
+    if not config.bots[0].main:
         raise Exception("First bot must be configured as a main bot")
 
     # ensure dimension is integer

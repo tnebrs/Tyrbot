@@ -41,11 +41,11 @@ class PublicChannelService:
         self.db.exec("CREATE TABLE IF NOT EXISTS org_name_cache (org_id INT NOT NULL, name VARCHAR(255) NOT NULL)")
 
     def handle_login_ok(self, conn: Conn, packet: server_packets.LoginOK):
-        if not conn.is_main:
+        if not conn.main:
             return
 
     def add(self, conn: Conn, packet: server_packets.PublicChannelJoined):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         conn.channels[packet.channel_id] = packet
@@ -71,13 +71,13 @@ class PublicChannelService:
             self.logger.info(f"Org info for '{conn.id}': {conn.org_name} ({conn.org_id}); source: '{source}'")
 
     def remove(self, conn: Conn, packet: server_packets.PublicChannelLeft):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         del conn.channels[packet.channel_id]
 
     def public_channel_message(self, conn: Conn, packet: server_packets.PublicChannelMessage):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         if conn.org_channel_id == packet.channel_id:
@@ -111,7 +111,7 @@ class PublicChannelService:
                                                                           "conn": conn}))
 
     def handle_public_channel_command(self, conn: Conn, packet: server_packets.PublicChannelMessage):
-        if not self.setting_service.get("accept_commands_from_slave_bots").get_value() and not conn.is_main:
+        if not self.setting_service.get("accept_commands_from_slave_bots").get_value() and not conn.main:
             return False
 
         # since the command symbol is required in the org channel,

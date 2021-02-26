@@ -339,7 +339,7 @@ class CommandService:
         return self.handlers.get(command_key, None)
 
     def handle_private_message(self, conn: Conn, packet: server_packets.PrivateMessage):
-        if not self.setting_service.get("accept_commands_from_slave_bots").get_value() and not conn.is_main:
+        if not self.setting_service.get("accept_commands_from_slave_bots").get_value() and not conn.main:
             return
 
         # since the command symbol is not required for private messages,

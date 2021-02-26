@@ -60,7 +60,7 @@ class AllianceRelayController:
         self.bot.register_packet_handler(server_packets.PrivateChannelMessage.id, self.handle_private_channel_message)
 
     def handle_private_channel_invite(self, conn: Conn, packet: server_packets.PrivateChannelInvited):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         if not self.setting_service.get("arelay_enabled").get_value():
@@ -73,7 +73,7 @@ class AllianceRelayController:
             self.relay_channel_id = packet.private_channel_id
 
     def handle_private_channel_message(self, conn: Conn, packet: server_packets.PrivateChannelMessage):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         if not self.setting_service.get("arelay_enabled").get_value():

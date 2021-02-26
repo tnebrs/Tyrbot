@@ -17,7 +17,7 @@ config = DictObject({
       "username": "",
       "password": "",
       "character": "",
-      "is_main": True
+      "main": True
     }
   ],
 

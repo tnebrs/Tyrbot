@@ -142,17 +142,17 @@ class Tyrbot:
             conn.connect(config.server.host, config.server.port)
 
             # only create the mass_message_queue if there is at least 1 non-main bot
-            if not bot.is_main and not self.mass_message_queue:
+            if not bot.main and not self.mass_message_queue:
                 self.mass_message_queue = FifoQueue()
 
-            packet = conn.login(bot.username, bot.password, bot.character, is_main=bot.is_main)
+            packet = conn.login(bot.username, bot.password, bot.character, main=bot.main)
             if not packet:
                 self.status = BotStatus.ERROR
                 return False
             else:
                 self.incoming_queue.put((conn, packet))
 
-            self.create_conn_thread(conn, None if bot.is_main else self.mass_message_queue)
+            self.create_conn_thread(conn, None if bot.main else self.mass_message_queue)
 
         return True
 
@@ -364,7 +364,7 @@ class Tyrbot:
                     self.get_primary_conn().send_packet(packet)
 
     def send_message_to_other_org_channels(self, msg, from_conn: Conn):
-        for _id, conn in self.get_conns(lambda x: x.is_main and x != from_conn):
+        for _id, conn in self.get_conns(lambda x: x.main and x != from_conn):
             self.send_org_message(msg, conn=conn)
 
     def handle_private_message(self, conn: Conn, packet: server_packets.PrivateMessage):

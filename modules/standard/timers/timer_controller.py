@@ -171,7 +171,7 @@ class TimerController:
 
         if timer.channel == PublicChannelService.ORG_CHANNEL_COMMAND or timer.channel == PrivateChannelService.PRIVATE_CHANNEL_COMMAND:
             # TODO send to messagehub
-            for _id, conn in self.bot.get_conns(lambda x: x.is_main):
+            for _id, conn in self.bot.get_conns(lambda x: x.main):
                 self.bot.send_org_message(msg, conn=conn)
 
             self.bot.send_private_channel_message(msg, conn=self.bot.get_primary_conn())

@@ -6,7 +6,7 @@ def create_new_cfg(config_file, template_config):
                 "username": validate_input("Account username"),
                 "password": validate_input("Account password"),
                 "character": validate_input("Enter the character name the bot will run on"),
-                "is_main": True
+                "main": True
             }
         ],
         "database": {

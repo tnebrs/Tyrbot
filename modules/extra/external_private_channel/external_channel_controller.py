@@ -24,7 +24,7 @@ class ExternalChannelController:
         self.bot.register_packet_handler(server_packets.PrivateChannelMessage.id, self.handle_private_channel_message)
 
     def handle_private_channel_invite(self, conn: Conn, packet: server_packets.PrivateChannelInvited):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         channel_name = self.character_service.get_char_name(packet.private_channel_id)
@@ -36,7 +36,7 @@ class ExternalChannelController:
             self.logger.info("Joined private channel %s" % channel_name)
 
     def handle_private_channel_kick(self, conn: Conn, packet: server_packets.PrivateChannelKicked):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         if packet.private_channel_id in self.private_channels:
@@ -45,7 +45,7 @@ class ExternalChannelController:
             self.logger.info("Kicked from private channel %s" % channel_name)
 
     def handle_private_channel_message(self, conn: Conn, packet: server_packets.PrivateChannelMessage):
-        if not conn.is_main:
+        if not conn.main:
             return
 
         if packet.private_channel_id == conn.get_char_id():

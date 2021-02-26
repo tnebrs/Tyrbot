@@ -41,7 +41,7 @@ class DarkController:
         self.setting_service.register(self.module_name, "dark_event", "true", BooleanSettingType(), "Is the Event channel visible?")
 
     def handle_private_channel_invite(self, conn: Conn, packet: server_packets.PrivateChannelInvited):
-        if not conn.is_main:
+        if not conn.main:
             pass
 
         if self.setting_service.get_value("dark_relay") == "0":
@@ -55,7 +55,7 @@ class DarkController:
             self.relay_name = channel_name
 
     def handle_private_channel_message(self, conn, packet: server_packets.PrivateChannelMessage):
-        if not conn.is_main:
+        if not conn.main:
             pass
 
         if self.setting_service.get_value("dark_relay") == "0":
